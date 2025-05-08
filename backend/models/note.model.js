@@ -22,6 +22,7 @@ const noteSchema = new mongoose.Schema({
       "BCH",
       "Other",
     ],
+    default: "BCT",
   },
   semester: {
     type: Number,
@@ -39,16 +40,23 @@ const noteSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  pdfDriveLink: {
+  pdfDriveId: {
     type: String,
     required: true,
     trim: true,
+  },
+  topicId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Topic",
+    required: true,
   },
   relatedVideos: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Video",
   },
   tags: [String],
+  upvotes: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  downvotes: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   createdAt: {
     type: Date,
     default: Date.now,

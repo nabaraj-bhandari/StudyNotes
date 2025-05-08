@@ -22,6 +22,7 @@ const videoSchema = new mongoose.Schema({
       "BCH",
       "Other",
     ],
+    default: "BCT",
   },
   semester: {
     type: Number,
@@ -39,15 +40,21 @@ const videoSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  videoLink: {
+  youtubeId: {
     type: String,
     required: true,
-    trim: true,
+  },
+  topicId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Topic",
+    required: true,
   },
   relatedNotes: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Note",
   },
+  upvotes: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  downvotes: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   tags: [String],
   createdAt: {
     type: Date,

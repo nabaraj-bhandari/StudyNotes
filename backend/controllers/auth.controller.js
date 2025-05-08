@@ -3,40 +3,54 @@ const { validationResult } = require("express-validator");
 const userModel = require("../models/user.model");
 
 module.exports.register = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(401).json({
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(401).json({
+        success: false,
+        message: "Validation Error",
+        errors: errors.array(),
+      });
+    }
+
+    const { name, email, password } = req.body;
+    hashedPassword = await userModel.hashPassword(password);
+
+    const user = await authService.register({
+      firstName: name.firstName,
+      lastName: name.lastName,
+      email,
+      password: hashedPassword,
+    });
+
+    const token = user.createAuthToken();
+
+    res.status(201).json({
+      success: true,
+      message: "User registered successfully",
+      data: {
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        },
+        token,
+      },
+    });
+  } catch (error) {
+    if (error.message === "User with this email already exists") {
+      return res.status(409).json({
+        success: false,
+        message: error.message,
+      });
+    }
+    res.status(500).json({
       success: false,
-      message: "Validation Error",
-      errors: errors.array(),
+      message: "Server Error",
+      error: error.message,
     });
   }
-
-  const { name, email, password } = req.body;
-  hashedPassword = await userModel.hashPassword(password);
-
-  const user = await authService.register({
-    firstName: name.firstName,
-    lastName: name.lastName,
-    email,
-    password: hashedPassword,
-  });
-
-  const token = user.createAuthToken();
-
-  res.status(201).json({
-    success: true,
-    message: "User registered successfully",
-    data: {
-      user: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
-      token,
-    },
-  });
 };
 
 module.exports.login = async (req, res) => {

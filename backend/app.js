@@ -5,6 +5,10 @@ const cookieParser = require("cookie-parser");
 const connectDB = require("./db/db");
 
 const authRoutes = require("./routes/auth.routes");
+const subjectRoutes = require("./routes/subject.routes");
+const topicRoutes = require("./routes/topic.routes");
+const noteRoutes = require("./routes/note.routes");
+const videoRoutes = require("./routes/video.routes"); // Add this line
 
 connectDB();
 
@@ -23,5 +27,9 @@ app.get("/", (req, res) => {
 
 // Importing routes
 app.use("/api/auth", authRoutes);
+app.use("/api/subjects", subjectRoutes);
+app.use("/api/topics", topicRoutes);
+app.use("/api/notes", noteRoutes);
+app.use("/api/videos", videoRoutes); // Add this line
 
 module.exports = app;
